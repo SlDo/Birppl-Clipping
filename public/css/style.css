@@ -1,0 +1,31 @@
+:root {
+    --color-main: #5740a0;
+    --color-second: #34314f;
+    --font-f: 'Roboto', sans-serif;
+    --title-size: 2.250em;
+    --subtitle-size: 1em;
+    --error-color: #ed3833;
+    --success-color: #58b368;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    font-family: var(--font-f);
+}
+
+b {
+    font-weight: 400;
+}
+
+button, select, input {
+    outline: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+.inactive {
+    display: none !important;
+}

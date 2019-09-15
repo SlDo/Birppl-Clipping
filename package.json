@@ -1,0 +1,26 @@
+{
+  "name": "up-birppl",
+  "version": "1.0.0",
+  "description": "Загрузчик фотографий для Birppl.ru",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SlDo/Upload-Birppl.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SlDo/Upload-Birppl/issues"
+  },
+  "homepage": "https://github.com/SlDo/Upload-Birppl#readme",
+  "dependencies": {
+    "aes-js": "^3.1.2",
+    "ejs": "^2.6.2",
+    "express": "^4.17.1",
+    "multiparty": "^4.2.1",
+    "nodemon": "^1.19.1"
+  }
+}

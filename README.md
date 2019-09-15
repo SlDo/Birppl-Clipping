@@ -1,2 +1,2 @@
-# Birppl-Clipping
-Обрезание изображения для Birppl
+# Upload-Birppl
+Загрузчик фотографий для Birppl.ru
