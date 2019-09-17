@@ -4,7 +4,7 @@
   "description": "Загрузчик фотографий для Birppl.ru",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
