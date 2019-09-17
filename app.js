@@ -26,7 +26,7 @@ function decrypt256(data) {
 app.set("view engine", "ejs");
 app.use("/public", express.static(__dirname + "/public"));
 
-app.get('/', function (req, res) {
+app.get('/profile', function (req, res) {
     res.render('profile');
 });
 
