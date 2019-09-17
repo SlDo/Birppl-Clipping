@@ -38,4 +38,4 @@ app.post('/upload', function (req, res) {
     });
 });
 
-app.listen(9000);
+app.listen(process.env.PORT || 6000);
