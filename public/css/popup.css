@@ -41,25 +41,12 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative;
-}
-
-
-.resize:before {
-    content: '';
-    display: inline-block;
-    position: absolute;
-    opacity: 0.5;
-    width: 100%;
-    height: 100%;
-    background-color: var(--color-second);
 }
 
 .resize__control {
     cursor: move;
     min-width: 200px;
     min-height: 200px;
-    position: absolute;
     border: 0.25em dashed var(--color-main);
     z-index: 7777;
 }
