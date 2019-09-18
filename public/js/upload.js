@@ -12,7 +12,7 @@ submit.addEventListener('click', function () {
             img.addEventListener('load', function () {
                 let progress = document.querySelector('#progress');
                 canvas.width = 700;
-                canvas.height = 525;
+                canvas.height = 540;
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 context.drawImage(img, 0, 0, canvas.width, canvas.height);
                 let jpeg = new Image();
