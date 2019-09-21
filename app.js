@@ -26,16 +26,16 @@ function decrypt256(data) {
 app.set("view engine", "ejs");
 app.use("/public", express.static(__dirname + "/public"));
 
-app.get('/', function (req, res) {
+app.get('/profile', function (req, res) {
     res.render('profile');
 });
 
-app.post('/upload', function (req, res) {
-    let form = new multiparty.Form();
-    form.parse(req, function(err, fields, files) {
-        crypt256(fields.img[0]);
-        res.send(decrypt256(crypt256(fields.img[0])));
-    });
-});
+// app.post('/upload', function (req, res) {
+//     let form = new multiparty.Form();
+//     form.parse(req, function(err, fields, files) {
+//         crypt256(fields.img[0]);
+//         res.send(decrypt256(crypt256(fields.img[0])));
+//     });
+// });
 
-app.listen(process.env.PORT || 6000);
+app.listen(9000);
