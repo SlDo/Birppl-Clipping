@@ -27,30 +27,52 @@ submit.addEventListener('click', function () {
                 };
 
                 let resizeControl = document.querySelector('.resize__control');
-                function resize(e) {
-                    let x = e.pageX - resizeControl.getBoundingClientRect().left;
-                    let y = e.pageY - resizeControl.getBoundingClientRect().top;
-                    let clamped = true;
-                    document.body.appendChild(resizeControl);
+                let object = {};
 
-                    document.addEventListener('mousemove', function(e) {
-                        if (clamped) {
-                            resizeControl.style.left = e.pageX - x + 'px';
-                            resizeControl.style.top = e.pageY - y + 'px';
+                resizeControl.addEventListener('mousedown', function(e) {
+                    object.mouseX = e.pageX - resizeControl.getBoundingClientRect().left;
+                    object.mouseY = e.pageY - resizeControl.getBoundingClientRect().top;
+                    object.press = true;
+                    mousemove(e);
+
+                    function mousemove(e) {
+
+                        let limits = {
+                            top: resizeElem.getBoundingClientRect().top,
+                            left: resizeElem.getBoundingClientRect().left,
+                            bottom: resizeElem.getBoundingClientRect().bottom,
+                            right: resizeElem.getBoundingClientRect().right
+                        };
+
+                        if(object.press) {
+                            resizeControl.style.left = `${e.pageX - object.mouseX}px`;
+                            resizeControl.style.top = `${e.pageY - object.mouseY}px`;
                         }
-                    });
-                    document.addEventListener('mouseup', function () {
-                        clamped = false;
-                        document.onmousemove = null;
-                        resizeControl.onmouseup = null;
-                    });
-                };
-                document.querySelector('.resize__control').addEventListener('mousedown', resize);
+
+                        if(resizeControl.getBoundingClientRect().left < limits.left) {
+                            resizeControl.style.left = `${limits.left}px`;
+                        } else if(resizeControl.getBoundingClientRect().right > limits.right) {
+                            resizeControl.style.left = `${limits.right - resizeControl.clientWidth}px`;
+                        }
+
+                        if(resizeControl.getBoundingClientRect().top < limits.top) {
+                            resizeControl.style.top = `${limits.top}px`;
+                        } else if(resizeControl.getBoundingClientRect().bottom > limits.bottom) {
+                            resizeControl.style.top = `${limits.bottom - resizeControl.clientHeight}px`;
+                        }
+                    }
+                    document.addEventListener('mousemove', mousemove);
+                });
+
+                document.addEventListener('mouseup', function() {
+                    object.press = false;
+                    document.addEventListener('mouseup', null);
+                    resizeControl.addEventListener('mouseup', null);
+                });
 
                 resizeControl.addEventListener('dragstart', function () {
                     return false;
                 });
-
 
                 document.querySelector('#crop').addEventListener('click', function (e) {
                     let x = document.querySelector('.resize__control').getBoundingClientRect().left - document.querySelector('.resize').getBoundingClientRect().left;
