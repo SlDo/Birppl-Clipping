@@ -10,9 +10,12 @@ fileZone.addEventListener('drop', photoUpload);
 fileInput.addEventListener('change', photoUpload);
 function photoUpload(e) {
     e.preventDefault();
-    console.log('Файл');
-    let files = fileInput.files;
-    console.log(files[0]);
+    let files;
+    if(e.type === 'change') {
+        files = fileInput.files;
+    } else {
+        files = e.dataTransfer.files;
+    }
     for(let i = 0; i < files.length; i++) {
         let img = new Image();
         let reader = new FileReader();
