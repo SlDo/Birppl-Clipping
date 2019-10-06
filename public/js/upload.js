@@ -1,33 +1,70 @@
-const fileInput = document.querySelector('#file');
+const fileInput = document.querySelector('#input__file');
+const fileZone = document.querySelector('.input__file');
 const submit = document.querySelector('#submit');
-let progress = document.querySelector('#progress');
 let resizeElem = document.querySelector('.resize');
+let svg = document.querySelectorAll('.input__file__svg');
+let crop = document.querySelector('#crop');
 
-submit.addEventListener('click', function () {
+
+fileZone.addEventListener('drop', photoUpload);
+fileInput.addEventListener('change', photoUpload);
+function photoUpload(e) {
+    e.preventDefault();
+    console.log('Файл');
     let files = fileInput.files;
+    console.log(files[0]);
     for(let i = 0; i < files.length; i++) {
         let img = new Image();
         let reader = new FileReader();
         reader.readAsDataURL(files[i]);
         reader.addEventListener('load', function (e) {
+            fileZone.style.display = 'none';
+            resizeElem.style.display = 'flex';
+            crop.style.display = 'block';
+            svg.forEach(function (value, i) {
+                if (i > 0) {
+                    value.classList.add('svg__success');
+                }
+            });
             img.src = e.target.result;
             img.addEventListener('load', function () {
-                canvas.width = resizeElem.clientWidth;
-                canvas.height = resizeElem.clientHeight;
+                if(document.querySelector('.resize__control')) {
+                    resizeElem.removeChild(document.querySelector('.resize__control'));
+                }
+                let resizeC = document.createElement('DIV');
+                resizeC.classList.add('resize__control');
+                resizeC.style.position = 'absolute';
+                resizeElem.appendChild(resizeC);
+
+                canvas.width = 1000;
+                canvas.height = 800;
+
                 context.clearRect(0, 0, canvas.width, canvas.height);
+                function CurrentSize(elem) {
+                    if(elem.width > elem.height) {
+                        let proportion = Math.min(elem.width / elem.height);
+                        this.width = canvas.width / proportion;
+                        this.height = canvas.height / proportion;
+                    } else if(elem.height > elem.width) {
+                        let proportion = Math.min(elem.height / elem.width);
+                        this.width = canvas.height / proportion;
+                        this.height = canvas.width / proportion;
+                    }
+                }
+
+                let currentImg = new CurrentSize(img);
+                canvas.width = currentImg.width;
+                canvas.height = currentImg.height;
                 context.drawImage(img, 0, 0, canvas.width, canvas.height);
+
                 let jpeg = new Image();
                 jpeg.src = canvas.toDataURL("image/jpeg", 0.85);
                 let xhr = new XMLHttpRequest();
                 let upload = new FormData();
                 xhr.open("POST", '/upload', true);
-                xhr.upload.onprogress = function(event) {
-                    progress.setAttribute('max', event.total);
-                    progress.value = event.loaded;
-                };
 
-                let resizeControl = document.querySelector('.resize__control');
                 let object = {};
+                let resizeControl = document.querySelector('.resize__control');
 
                 resizeControl.addEventListener('mousedown', function(e) {
                     object.mouseX = e.pageX - resizeControl.getBoundingClientRect().left;
@@ -93,4 +130,8 @@ submit.addEventListener('click', function () {
     }
     let canvas = document.getElementById('canvas');
     let context = canvas.getContext('2d');
+}
+
+fileZone.addEventListener('dragover', function (e) {
+    e.preventDefault();
 });
