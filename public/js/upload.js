@@ -11,10 +11,11 @@ fileInput.addEventListener('change', photoUpload);
 function photoUpload(e) {
     e.preventDefault();
     let files;
-    if(e.type === 'change') {
+    if(e.type === 'drop') {
         files = fileInput.files;
-    } else {
         files = e.dataTransfer.files;
+    } else {
+        files = fileInput.files;
     }
     for(let i = 0; i < files.length; i++) {
         let img = new Image();
