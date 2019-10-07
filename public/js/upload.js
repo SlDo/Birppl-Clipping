@@ -47,6 +47,7 @@ function photoUpload(e) {
                 function CurrentSize(elem) {
                     if(elem.width > elem.height) {
                         let propotion = Number.parseFloat(elem.width / elem.height).toFixed(3)
+                        console.log(propotion)
                         this.width = canvas.width / proportion;
                         this.height = canvas.height / proportion;
                     } else if(elem.height > elem.width) {
