@@ -40,8 +40,8 @@ function photoUpload(e) {
                 resizeC.style.position = 'absolute';
                 resizeElem.appendChild(resizeC);
 
-                canvas.width = 1000;
-                canvas.height = 800;
+                canvas.width = screen.width;
+                canvas.height = screen.height;
 
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 function CurrentSize(elem) {
