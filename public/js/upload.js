@@ -48,12 +48,10 @@ function photoUpload(e) {
                         let proportion = Number.parseFloat(elem.width / elem.height).toFixed(3)
                         console.log(proportion)
                         this.width = canvas.width / proportion;
-                        this.height = canvas.height / proportion;
                     } else if(elem.height > elem.width) {
                         canvas.width = 1000;
                         canvas.height = window.innerHeight;
                         let proportion = Number.parseFloat(elem.height / elem.width).toFixed(3)
-                        this.width = canvas.height / proportion;
                         this.height = canvas.width / proportion;
                     }
                 }
