@@ -54,7 +54,7 @@ function photoUpload(e) {
                         canvas.height = window.innerHeight;
                         let proportion = Number.parseFloat(elem.height / elem.width).toFixed(3)
                         this.height = canvas.width / proportion;
-                        this.width = 1000;
+                        this.width = 700;
                     }
                 }
 
