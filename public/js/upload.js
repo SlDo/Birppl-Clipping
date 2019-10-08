@@ -41,6 +41,7 @@ function photoUpload(e) {
                 resizeElem.appendChild(resizeC);
 
                 canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
 
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 function CurrentSize(elem) {
