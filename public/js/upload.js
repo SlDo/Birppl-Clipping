@@ -40,9 +40,6 @@ function photoUpload(e) {
                 resizeC.style.position = 'absolute';
                 resizeElem.appendChild(resizeC);
 
-                canvas.width = window.innerWidth;
-                canvas.height = 800;
-
                 context.clearRect(0, 0, canvas.width, canvas.height);
                 function CurrentSize(elem) {
                     if(elem.width > elem.height) {
@@ -53,7 +50,7 @@ function photoUpload(e) {
                         this.width = canvas.width / proportion;
                         this.height = canvas.height / proportion;
                     } else if(elem.height > elem.width) {
-                        canvas.width = 800;
+                        canvas.width = 500;
                         canvas.height = window.innerHeight;
                         let proportion = Number.parseFloat(elem.height / elem.width).toFixed(3)
                         this.width = canvas.height / proportion;
