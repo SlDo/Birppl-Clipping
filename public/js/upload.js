@@ -50,7 +50,7 @@ function photoUpload(e) {
                         this.width = canvas.width / proportion;
                         this.height = canvas.height / proportion;
                     } else if(elem.height > elem.width) {
-                        canvas.width = 500;
+                        canvas.width = 1000;
                         canvas.height = window.innerHeight;
                         let proportion = Number.parseFloat(elem.height / elem.width).toFixed(3)
                         this.width = canvas.height / proportion;
