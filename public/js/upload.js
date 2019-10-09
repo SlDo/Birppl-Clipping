@@ -11,11 +11,10 @@ fileInput.addEventListener('change', photoUpload);
 function photoUpload(e) {
     e.preventDefault();
     let files;
-    if(e.type === 'drop') {
+    if(e.type === 'change') {
         files = fileInput.files;
-        files = e.dataTransfer.files;
     } else {
-        files = fileInput.files;
+        files = e.dataTransfer.files;
     }
     for(let i = 0; i < files.length; i++) {
         let img = new Image();
@@ -41,24 +40,26 @@ function photoUpload(e) {
                 resizeElem.appendChild(resizeC);
 
                 context.clearRect(0, 0, canvas.width, canvas.height);
-                function CurrentSize(elem) {
-                    if(elem.width > elem.height) {
-                        canvas.width = window.innerWidth;
-                        canvas.height = 1000;
-                        let proportion = Number.parseFloat(elem.width / elem.height).toFixed(3)
-                        console.log(proportion)
-                        this.width = canvas.width / proportion;
-                        this.height = canvas.height / proportion;
-                    } else if(elem.height > elem.width) {
-                        canvas.width = 1000;
-                        canvas.height = window.innerHeight;
-                        let proportion = Number.parseFloat(elem.height / elem.width).toFixed(3)
-                        this.height = canvas.width / proportion;
-                        this.width = canvas.height / proportion;;
+                function ResizeImage(img) {
+                    const width = img.width;
+                    const height = img.height;
+
+                    if(width > height) {
+                        let consant = 800;
+                        this.width = consant;
+                        this.height = (height*consant) / width;
+                    } else if(width < height) {
+                        let consant = 600;
+                        this.width = (width*consant)/height;
+                        this.height = consant;
+                    } else {
+                        this.width = 800;
+                        this.height = 800;
                     }
                 }
 
-                let currentImg = new CurrentSize(img);
+
+                let currentImg = new ResizeImage(img);
                 canvas.width = currentImg.width;
                 canvas.height = currentImg.height;
                 context.drawImage(img, 0, 0, canvas.width, canvas.height);
