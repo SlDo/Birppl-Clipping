@@ -1,9 +1,9 @@
 const fileInput = document.querySelector('#input__file');
 const fileZone = document.querySelector('.input__file');
-const submit = document.querySelector('#submit');
 let resizeElem = document.querySelector('.resize');
 let svg = document.querySelectorAll('.input__file__svg');
 let crop = document.querySelector('#crop');
+let newPhoto = document.querySelector('#new');
 
 
 fileZone.addEventListener('drop', photoUpload);
@@ -23,7 +23,8 @@ function photoUpload(e) {
         reader.addEventListener('load', function (e) {
             fileZone.style.display = 'none';
             resizeElem.style.display = 'flex';
-            crop.style.display = 'block';
+            crop.style.display = 'inline-block';
+            newPhoto.style.display = 'inline-block';
             svg.forEach(function (value, i) {
                 if (i > 0) {
                     value.classList.add('svg__success');
@@ -39,19 +40,26 @@ function photoUpload(e) {
                 resizeC.style.position = 'absolute';
                 resizeElem.appendChild(resizeC);
 
-                context.clearRect(0, 0, canvas.width, canvas.height);
+                newPhoto.addEventListener('click', function() {
+                    fileZone.style.display = 'flex';
+                    resizeElem.style.display = 'none';
+                    crop.style.display = 'none';
+                    newPhoto.style.display = 'none';
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+                });
+
                 function ResizeImage(img) {
                     const width = img.width;
                     const height = img.height;
 
                     if(width > height) {
-                        let consant = 800;
-                        this.width = consant;
-                        this.height = (height*consant) / width;
+                        let constant = 600;
+                        this.width = constant;
+                        this.height = (height*constant) / width;
                     } else if(width < height) {
-                        let consant = 600;
-                        this.width = (width*consant)/height;
-                        this.height = consant;
+                        let constant = 600;
+                        this.width = (width*constant)/height;
+                        this.height = constant;
                     } else {
                         this.width = 800;
                         this.height = 800;
@@ -73,9 +81,12 @@ function photoUpload(e) {
                 let object = {};
                 let resizeControl = document.querySelector('.resize__control');
 
-                resizeControl.addEventListener('mousedown', function(e) {
-                    object.mouseX = e.pageX - resizeControl.getBoundingClientRect().left;
-                    object.mouseY = e.pageY - resizeControl.getBoundingClientRect().top;
+                resizeControl.addEventListener('mousedown', mousedown);
+                resizeControl.addEventListener('touchstart', mousedown);
+
+                function mousedown(e) {
+                    object.mouseX = (e.pageX || e.changedTouches[0].pageX) - resizeControl.getBoundingClientRect().left;
+                    object.mouseY = (e.pageY || e.changedTouches[0].pageY) - resizeControl.getBoundingClientRect().top;
                     object.press = true;
                     mousemove(e);
 
@@ -89,8 +100,8 @@ function photoUpload(e) {
                         };
 
                         if(object.press) {
-                            resizeControl.style.left = `${e.pageX - object.mouseX}px`;
-                            resizeControl.style.top = `${e.pageY - object.mouseY}px`;
+                            resizeControl.style.left = `${(e.pageX || e.changedTouches[0].pageX) - object.mouseX}px`;
+                            resizeControl.style.top = `${(e.pageY || e.changedTouches[0].pageY) - object.mouseY}px`;
                         }
 
                         if(resizeControl.getBoundingClientRect().left < limits.left) {
@@ -106,13 +117,17 @@ function photoUpload(e) {
                         }
                     }
                     document.addEventListener('mousemove', mousemove);
-                });
+                    document.addEventListener('touchmove', mousemove);
+                }
 
-                document.addEventListener('mouseup', function() {
+                function mouseup() {
                     object.press = false;
                     document.addEventListener('mouseup', null);
                     resizeControl.addEventListener('mouseup', null);
-                });
+                }
+
+                document.addEventListener('mouseup', mouseup);
+                document.addEventListener('touchend', mouseup);
 
                 resizeControl.addEventListener('dragstart', function () {
                     return false;
