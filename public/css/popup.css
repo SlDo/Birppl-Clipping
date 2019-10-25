@@ -43,6 +43,7 @@
     min-height: 200px;
     z-index: 9;
     outline: 0.25em solid var(--color-main);
+    backdrop-filter: blur(2px);
 }
 
 .input__file {
