@@ -36,14 +36,14 @@
     justify-content: center;
     align-items: center;
     position: relative;
+    overflow: hidden;
 }
 
 .resize__control {
     cursor: move;
-    min-width: 200px;
-    min-height: 200px;
-    z-index: 9;
-    outline: 0.25em solid var(--color-main);
+    width: 200px;
+    height: 200px;
+    box-shadow: 0 0 0 100vmax rgba(0, 0, 0, .8);
 }
 
 .input__file {

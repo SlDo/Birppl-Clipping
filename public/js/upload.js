@@ -67,8 +67,8 @@ function photoUpload(e) {
                 resizeControl.addEventListener('touchstart', mousedown);
 
                 function mousedown(e) {
-                    objectResizeZone.mouseX = e.pageX - resize.getBoundingClientRect().left - resizeControl.offsetLeft;
-                    objectResizeZone.mouseY = e.pageY - resize.getBoundingClientRect().top - resizeControl.offsetTop;
+                    objectResizeZone.mouseX = ((e.pageX - resize.getBoundingClientRect().left)||(e.changedTouches[0].pageX - resize.getBoundingClientRect().left)) - resizeControl.offsetLeft;
+                    objectResizeZone.mouseY = ((e.pageY - resize.getBoundingClientRect().top)||(e.changedTouches[0].pageY - resize.getBoundingClientRect().top)) - resizeControl.offsetTop;
                     objectResizeZone.press = true;
                     mousemove(e);
 
@@ -82,8 +82,8 @@ function photoUpload(e) {
                         };
 
                         if(objectResizeZone.press) {
-                            resizeControl.style.left = `${e.pageX - resize.getBoundingClientRect().left - objectResizeZone.mouseX}px`;
-                            resizeControl.style.top = `${e.pageY - resize.getBoundingClientRect().top - objectResizeZone.mouseY}px`;
+                            resizeControl.style.left = `${((e.pageX - resize.getBoundingClientRect().left)||(e.changedTouches[0].pageX - resize.getBoundingClientRect().left)) - objectResizeZone.mouseX}px`;
+                            resizeControl.style.top = `${((e.pageY - resize.getBoundingClientRect().top)||(e.changedTouches[0].pageY - resize.getBoundingClientRect().top)) - objectResizeZone.mouseY}px`;
                         }
 
                         if(resizeControl.offsetLeft < limits.left) {
@@ -122,8 +122,7 @@ function photoUpload(e) {
                     resizeCanvas.width = 200;
                     resizeCanvas.height = 200;
                     context.drawImage(cropImage, x, y, 200, 200, 0, 0, 200, 200);
-                    resize.appendChild(resizeCanvas);
-                    console.log(resizeCanvas.toDataURL('image/jpeg', 1));
+                    console.log(resizeCanvas.toDataURL('image/jpeg', 1))
                 });
             })
         })
