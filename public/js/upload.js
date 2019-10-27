@@ -54,46 +54,47 @@ function photoUpload(e) {
                 context.drawImage(img, 0, 0, currentImg.width, currentImg.height);
                 resize.appendChild(resizeZone);
                 // Добавляет картинку
-                let jpeg = new Image();
-                jpeg.src = resizeCanvas.toDataURL('image/jpeg', 0.75);
+                let cropImage = new Image();
+                cropImage.src = resizeCanvas.toDataURL();
                 resize.appendChild(img);
 
                 // Drag&drop для зоны обрезки
                 let objectResizeZone = {};
                 let resizeControl = document.querySelector('.resize__control');
-
+                resizeControl.style.left ='15px';
+                resizeControl.style.top = '25px';
                 resizeControl.addEventListener('mousedown', mousedown);
                 resizeControl.addEventListener('touchstart', mousedown);
 
                 function mousedown(e) {
-                    objectResizeZone.mouseX = (e.pageX || e.changedTouches[0].pageX) - resizeControl.getBoundingClientRect().left;
-                    objectResizeZone.mouseY = (e.pageY || e.changedTouches[0].pageY) - resizeControl.getBoundingClientRect().top;
+                    objectResizeZone.mouseX = e.pageX - resize.getBoundingClientRect().left - resizeControl.offsetLeft;
+                    objectResizeZone.mouseY = e.pageY - resize.getBoundingClientRect().top - resizeControl.offsetTop;
                     objectResizeZone.press = true;
                     mousemove(e);
 
                     function mousemove(e) {
 
                         let limits = {
-                            top: img.getBoundingClientRect().top,
-                            left: img.getBoundingClientRect().left,
-                            bottom: img.getBoundingClientRect().bottom,
-                            right: img.getBoundingClientRect().right
+                            top: 0,
+                            left: 0,
+                            bottom: img.offsetHeight,
+                            right: img.offsetWidth
                         };
 
                         if(objectResizeZone.press) {
-                            resizeControl.style.left = `${(e.pageX || e.changedTouches[0].pageX) - objectResizeZone.mouseX}px`;
-                            resizeControl.style.top = `${(e.pageY || e.changedTouches[0].pageY) - objectResizeZone.mouseY}px`;
+                            resizeControl.style.left = `${e.pageX - resize.getBoundingClientRect().left - objectResizeZone.mouseX}px`;
+                            resizeControl.style.top = `${e.pageY - resize.getBoundingClientRect().top - objectResizeZone.mouseY}px`;
                         }
 
-                        if(resizeControl.getBoundingClientRect().left < limits.left) {
+                        if(resizeControl.offsetLeft < limits.left) {
                             resizeControl.style.left = `${limits.left}px`;
-                        } else if(resizeControl.getBoundingClientRect().right > limits.right) {
+                        } else if(resizeControl.offsetLeft + resizeControl.offsetWidth > limits.right) {
                             resizeControl.style.left = `${limits.right - resizeControl.clientWidth}px`;
                         }
 
-                        if(resizeControl.getBoundingClientRect().top < limits.top) {
+                        if(resizeControl.offsetTop < limits.top) {
                             resizeControl.style.top = `${limits.top}px`;
-                        } else if(resizeControl.getBoundingClientRect().bottom > limits.bottom) {
+                        } else if(resizeControl.offsetTop + resizeControl.offsetHeight > limits.bottom) {
                             resizeControl.style.top = `${limits.bottom - resizeControl.clientHeight}px`;
                         }
                     }
@@ -118,11 +119,12 @@ function photoUpload(e) {
                     let x = document.querySelector('.resize__control').getBoundingClientRect().left - resize.getBoundingClientRect().left;
                     let y = document.querySelector('.resize__control').getBoundingClientRect().top - resize.getBoundingClientRect().top;
 
-                    resizeCanvas.width = parseInt(img.style.width);
-                    resizeCanvas.height = parseInt(img.style.height);
-                    context.drawImage(jpeg, x, y, 200, 200, 0, 0, 200, 200);
+                    resizeCanvas.width = 200;
+                    resizeCanvas.height = 200;
+                    context.drawImage(cropImage, x, y, 200, 200, 0, 0, 200, 200);
                     resize.appendChild(resizeCanvas);
-                })
+                    console.log(resizeCanvas.toDataURL('image/jpeg', 1));
+                });
             })
         })
     }
