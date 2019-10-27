@@ -72,3 +72,10 @@
     outline: none;
     border: none;
 }
+
+@media screen and (max-width: 600px) {
+    .popup__container, .resize {
+        width: 100%;
+        height: 100%;
+    }
+}
