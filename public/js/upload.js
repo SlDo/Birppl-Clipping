@@ -27,16 +27,16 @@ function photoUpload(e) {
                     const height = img.height;
 
                     if(width > height) {
-                        let constant = 600;
+                        let constant = document.body.offsetWidth * 0.5;
                         this.width = constant;
                         this.height = (height*constant) / width;
                     } else if(width < height) {
-                        let constant = 600;
+                        let constant = document.body.offsetHeight * 0.8;
                         this.width = (width*constant)/height;
                         this.height = constant;
                     } else {
-                        this.width = 800;
-                        this.height = 800;
+                        this.width = 600;
+                        this.height = 600;
                     }
                 }
 
@@ -122,7 +122,6 @@ function photoUpload(e) {
                     resizeCanvas.width = 200;
                     resizeCanvas.height = 200;
                     context.drawImage(cropImage, x, y, 200, 200, 0, 0, 200, 200);
-                    console.log(resizeCanvas.toDataURL('image/jpeg', 1))
                 });
             })
         })
