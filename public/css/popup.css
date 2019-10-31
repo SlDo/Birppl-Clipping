@@ -43,8 +43,6 @@
 
 .resize__control {
     cursor: move;
-    width: 200px;
-    height: 200px;
     box-shadow: 0 0 0 100vmax rgba(0, 0, 0, .8);
 }
 

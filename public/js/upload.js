@@ -25,15 +25,22 @@ function photoUpload(e) {
                 function ResizeImage(img) {
                     const width = img.width;
                     const height = img.height;
-
                     if(width > height) {
                         let constant = document.body.offsetWidth * 0.5;
+                        if(document.body.offsetWidth < 768) {
+                            constant = document.body.offsetWidth;
+                        }
                         this.width = constant;
                         this.height = (height*constant) / width;
                     } else if(width < height) {
                         let constant = document.body.offsetHeight * 0.8;
-                        this.width = (width*constant)/height;
-                        this.height = constant;
+                        if(document.body.offsetWidth < 768) {
+                            this.width = document.body.offsetWidth;
+                            this.height = (height*document.body.offsetWidth)/width;
+                        } else {
+                            this.width = (width*constant)/height;
+                            this.height = constant;
+                        }
                     } else {
                         this.width = 600;
                         this.height = 600;
@@ -46,13 +53,28 @@ function photoUpload(e) {
                 // Скрывает поле загрузки
                 fileZone.style.display = 'none';
                 // Добавляет иконку передвижения
-                let resizeZone = createElement('div', {classList: ['resize__control'], style: {position: 'absolute'}});
+                let resizeZone = document.querySelector('.resize__control');
+                resizeZone.style.width = `${currentImg.resizeWidth}px`;
+                resizeZone.style.height = `${currentImg.resizeHeight}px`;
                 let resizeCanvas = createElement('canvas');
                 resizeCanvas.width = currentImg.width;
                 resizeCanvas.height = currentImg.height;
                 let context = resizeCanvas.getContext('2d');
                 context.drawImage(img, 0, 0, currentImg.width, currentImg.height);
-                resize.appendChild(resizeZone);
+                function AdaptiveResizeZone(width, height) {
+                    if ((width && height) < 200) {
+                        this.resizeHeight = document.body.offsetWidth * 0.5;
+                        this.resizeWidth = document.body.offsetWidth * 0.5;
+                    } else {
+                        this.resizeHeight = 200;
+                        this.resizeWidth = 200;
+                    }
+                }
+                let resizeZoneSize = new AdaptiveResizeZone(parseInt(img.style.width), parseInt(img.style.height));
+                resizeZone.style.width = `${resizeZoneSize.resizeWidth}px`;
+                resizeZone.style.height = `${resizeZoneSize.resizeHeight}px`;
+                resizeZone.style.display = 'block';
+                resizeZone.style.position = 'absolute';
                 // Добавляет картинку
                 let cropImage = new Image();
                 cropImage.src = resizeCanvas.toDataURL();
@@ -114,7 +136,7 @@ function photoUpload(e) {
                 resizeControl.addEventListener('dragstart', function () {
                     return false;
                 });
-
+                let newImg = new Image();
                 document.querySelector('#crop').addEventListener('click', function () {
                     let x = document.querySelector('.resize__control').getBoundingClientRect().left - resize.getBoundingClientRect().left;
                     let y = document.querySelector('.resize__control').getBoundingClientRect().top - resize.getBoundingClientRect().top;
@@ -122,6 +144,10 @@ function photoUpload(e) {
                     resizeCanvas.width = 200;
                     resizeCanvas.height = 200;
                     context.drawImage(cropImage, x, y, 200, 200, 0, 0, 200, 200);
+                    newImg.src = resizeCanvas.toDataURL('jpeg', 1);
+                    newImg.style.zIndex = 1080;
+                    newImg.classList.add('add');
+                    // resize.appendChild(newImg);
                 });
             })
         })
