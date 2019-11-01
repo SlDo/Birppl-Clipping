@@ -114,6 +114,10 @@
     cursor: pointer;
 }
 
+img {
+    image-orientation: from-image;
+}
+
 @media screen and (max-width: 768px) {
     .popup__container {
         width: 100%;
