@@ -31,7 +31,7 @@ function photoUpload(e) {
                             constant = document.body.offsetWidth;
                         }
                         // Если значение height или width меньше 200 - то подгонять под минимальный размер
-                        if((constant || (height*constant)/width) < 200) {
+                        if(constant < 200 || (height*constant)/width < 200) {
                             constant = 200;
                             this.height = constant;
                             this.width = (width*constant)/height;
@@ -42,7 +42,7 @@ function photoUpload(e) {
                     } else if(width < height) {
                         let constant = document.body.offsetHeight * 0.8;
                         // Если значение height или width меньше 200 - то подгонять под минимальный размер
-                        if((constant || (height*constant)/width) < 200) {
+                        if((constant < 200 || height*constant)/width < 200) {
                             constant = 200;
                             this.width = constant;
                             this.height = (height*constant)/width;
@@ -120,7 +120,6 @@ function photoUpload(e) {
                             };
 
                             if(objectDragZone.press) {
-                                console.log(limits);
                                 options.x ? dragElement.style.left = `${((e.pageX - dragZone.getBoundingClientRect().left)||(e.changedTouches[0].pageX - dragZone.getBoundingClientRect().left)) - objectDragZone.mouseX}px` : false;
                                 options.y ? dragElement.style.top = `${((e.pageY - dragZone.getBoundingClientRect().top)||(e.changedTouches[0].pageY - dragZone.getBoundingClientRect().top)) - objectDragZone.mouseY}px` : false;
                             }
