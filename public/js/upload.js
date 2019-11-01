@@ -115,11 +115,12 @@ function photoUpload(e) {
                             let limits = {
                                 top: img.offsetTop,
                                 left: img.offsetLeft,
-                                bottom: img.offsetHeight,
-                                right: img.offsetWidth
+                                bottom: img.offsetHeight + img.offsetTop,
+                                right: img.offsetWidth + img.offsetLeft
                             };
 
                             if(objectDragZone.press) {
+                                console.log(limits);
                                 options.x ? dragElement.style.left = `${((e.pageX - dragZone.getBoundingClientRect().left)||(e.changedTouches[0].pageX - dragZone.getBoundingClientRect().left)) - objectDragZone.mouseX}px` : false;
                                 options.y ? dragElement.style.top = `${((e.pageY - dragZone.getBoundingClientRect().top)||(e.changedTouches[0].pageY - dragZone.getBoundingClientRect().top)) - objectDragZone.mouseY}px` : false;
                             }
