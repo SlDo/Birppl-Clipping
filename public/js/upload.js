@@ -65,7 +65,7 @@ function photoUpload(e) {
                     move.style.display = 'block';
                     move.addEventListener('input', function () {
                         img.style.position = 'absolute';
-                        img.style.left = `${(this.value-50)*2}px`;
+                        img.style.left = `${(this.value - 50)*2}px`;
                     });
                 }
                 // Скрывает поле загрузки
