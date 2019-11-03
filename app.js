@@ -26,6 +26,11 @@ function decrypt256(data) {
 app.set("view engine", "ejs");
 app.use("/public", express.static(__dirname + "/public"));
 
+app.post('/upload', function (req, res) {
+    console.log(req.body);
+    console.log('Загрузка')
+});
+
 app.get('/', function (req, res) {
     res.render('profile');
 });

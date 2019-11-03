@@ -20,7 +20,12 @@
     "aes-js": "^3.1.2",
     "ejs": "^2.6.2",
     "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "i": "^0.3.6",
+    "image-convert": "^0.1.33",
     "multiparty": "^4.2.1",
-    "nodemon": "^1.19.3"
+    "nodemon": "^1.19.3",
+    "npm": "^6.12.1",
+    "piexifjs": "^1.0.6"
   }
 }

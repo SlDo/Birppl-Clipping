@@ -1,6 +1,7 @@
 :root {
     --color-main: #5740a0;
     --color-second: #34314f;
+    --color-third: #958AD6;
     --font-f: 'Roboto', sans-serif;
     --title-size: 2.250em;
     --subtitle-size: 1em;
@@ -24,6 +25,10 @@ button, select, input {
 
 a {
     text-decoration: none;
+}
+
+img {
+    image-orientation: from-image;
 }
 
 .inactive {

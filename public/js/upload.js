@@ -1,8 +1,10 @@
 import {createElement} from "./modules/birppl-dom.js";
+import {dragAndDrop} from "./modules/dragdrop.js";
 
 let fileInput = document.querySelector('#input__file');
 let fileZone = document.querySelector('.input__file');
-let resize = document.querySelector('.resize');
+let resize = document.querySelector('.crop__zone');
+let previewText = document.querySelector('.preview__text');
 
 fileZone.addEventListener('drop', photoUpload);
 fileInput.addEventListener('change', photoUpload);
@@ -11,14 +13,15 @@ function photoUpload(e) {
     e.preventDefault();
     e.stopPropagation();
 
-    let filesUpload = (fileInput.files || e.dataTransfer.files);
+    resize.style.display = 'flex';
+
+    let filesUpload = (e.target.files || e.dataTransfer.files);
     for(let i = 0; i < filesUpload.length; i++) {
-        let img = new Image();
         let reader = new FileReader();
 
         reader.readAsDataURL(filesUpload[0]);
-
         reader.addEventListener('load', function (e) {
+            let img = new Image();
             img.src = e.target.result;
             img.addEventListener('load', function () {
                 // Функиция пропорционального ресайза изображения
@@ -56,110 +59,76 @@ function photoUpload(e) {
                     }
                 }
 
+                // Добавляет кнопки
+                let controlBtn = document.querySelector('.control__btn');
+                let btnPrevUpload = document.querySelector('#prevUpload');
+                let btnPrevCrop = document.querySelector('#prevCrop');
+                let btnCrop = document.querySelector('#crop');
+                let btnSuccess = document.querySelector('#success');
+                controlBtn.style.display = 'grid';
+                btnPrevUpload.style.display = 'block';
+
                 let currentImg = new ResizeImage(img);
                 img.style.width = `${currentImg.width}px`;
                 img.style.height = `${currentImg.height}px`;
                 // Добавление ползунка передвижения фотографии
-                if(document.body.offsetWidth < parseInt(img.style.width)) {
-                    let move = document.querySelector('.resize__movePhoto');
-                    move.style.display = 'block';
-                    move.addEventListener('input', function () {
-                        img.style.position = 'absolute';
-                        img.style.left = `${(this.value - 50)*2}px`;
-                    });
+                let move = document.querySelector('.crop__movePhoto');
+                function conditionsMove() {
+                    if(document.body.offsetWidth < parseInt(img.style.width)) {
+                        move.style.display = 'block';
+                        move.addEventListener('input', function () {
+                            img.style.position = 'absolute';
+                            img.style.left = `${(this.value - 50)*2}px`;
+                        });
+                    }
                 }
+                conditionsMove();
                 // Скрывает поле загрузки
                 fileZone.style.display = 'none';
                 // Добавляет иконку передвижения
                 let resizeCanvas = createElement('canvas');
                 resizeCanvas.width = currentImg.width;
                 resizeCanvas.height = currentImg.height;
-                let context = resizeCanvas.getContext('2d');
-                context.drawImage(img, 0, 0, currentImg.width, currentImg.height);
-                let resizeZone = document.querySelector('.resize__control');
-                resizeZone.style.width = `200px`;
-                resizeZone.style.height = `200px`;
-                resizeZone.style.display = 'block';
-                resizeZone.style.zIndex = 9;
-                // Добавляет картинку
-                let cropImage = new Image();
-                cropImage.src = resizeCanvas.toDataURL();
-                img.classList.add('hello');
                 resize.style.width = `${currentImg.width}px`;
                 resize.style.height = `${currentImg.height}px`;
+                let context = resizeCanvas.getContext('2d');
+                context.drawImage(img, 0, 0, currentImg.width, currentImg.height);
+
+                let resizeCreate = createElement('div', {classList: ['resize__control'], style: {width: '200px', height: '200px', display: 'block', zIndex: 9}})
+                resize.appendChild(resizeCreate);
+                // Добавляет картинку
+                img.classList.add('hello');
                 resize.appendChild(img);
 
-                function dragAndDrop(elementSelector, dragZone, options) {
-                    // options
-                    // x: true/false (передвижение по x)
-                    // y: true/false (передвижение по y)
+                function uploadPrev() {
+                    img.remove();
+                    resizeCanvas = null;
+                    resizeCreate.remove();
+                    move.style.display = 'none';
 
-                    // Drag&drop для зоны обрезки
-                    let objectDragZone = {};
-                    let dragElement = document.querySelector(elementSelector); // elementClass
-                    dragElement.style.position = 'absolute';
-
-                    dragElement.addEventListener('mousedown', mousedown);
-                    dragElement.addEventListener('touchstart', mousedown);
-
-                    function mousedown(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        objectDragZone.mouseX = ((e.pageX - resize.getBoundingClientRect().left)||(e.changedTouches[0].pageX - dragZone.getBoundingClientRect().left)) - dragElement.offsetLeft;
-                        objectDragZone.mouseY = ((e.pageY - resize.getBoundingClientRect().top)||(e.changedTouches[0].pageY - dragZone.getBoundingClientRect().top)) - dragElement.offsetTop;
-                        objectDragZone.press = true;
-                        mousemove(e);
-
-                        function mousemove(e) {
-
-                            let limits = {
-                                top: img.offsetTop,
-                                left: img.offsetLeft,
-                                bottom: img.offsetHeight + img.offsetTop,
-                                right: img.offsetWidth + img.offsetLeft
-                            };
-
-                            if(objectDragZone.press) {
-                                options.x ? dragElement.style.left = `${((e.pageX - dragZone.getBoundingClientRect().left)||(e.changedTouches[0].pageX - dragZone.getBoundingClientRect().left)) - objectDragZone.mouseX}px` : false;
-                                options.y ? dragElement.style.top = `${((e.pageY - dragZone.getBoundingClientRect().top)||(e.changedTouches[0].pageY - dragZone.getBoundingClientRect().top)) - objectDragZone.mouseY}px` : false;
-                            }
-
-                            if(dragElement.offsetLeft < limits.left) {
-                                dragElement.style.left = `${limits.left}px`;
-                            } else if(dragElement.offsetLeft + dragElement.offsetWidth > limits.right) {
-                                dragElement.style.left = `${limits.right - dragElement.clientWidth}px`;
-                            }
-
-                            if(dragElement.offsetTop < limits.top) {
-                                dragElement.style.top = `${limits.top}px`;
-                            } else if(dragElement.offsetTop + dragElement.offsetHeight > limits.bottom) {
-                                dragElement.style.top = `${limits.bottom - dragElement.clientHeight}px`;
-                            }
-                        }
-                        document.addEventListener('mousemove', mousemove);
-                        document.addEventListener('touchmove', mousemove);
-                    }
-
-                    function mouseup() {
-                        objectDragZone.press = false;
-                        document.addEventListener('mouseup', null);
-                        dragElement.addEventListener('mouseup', null);
-                    }
-
-                    document.addEventListener('mouseup', mouseup);
-                    document.addEventListener('touchend', mouseup);
-
-                    dragElement.addEventListener('dragstart', function () {
-                        return false;
-                    });
+                    controlBtn.style.display = 'none';
+                    btnPrevUpload.style.display = 'none';
+                    resize.style.display = 'block';
+                    fileZone.style.display = 'flex';
                 }
 
-                dragAndDrop('.resize__control', resize, {x: true, y: true});
+                document.querySelector('#prevUpload').addEventListener('click', uploadPrev);
 
-                let newImg = new Image();
+                // Добавляет кнопку "обрезка"
+                btnCrop.style.display = 'block';
+
+                dragAndDrop('.resize__control', resize, {x: true, y: true, limit: img});
+                let cropImage = new Image();
+                cropImage.src = resizeCanvas.toDataURL('jpeg', 1);
                 document.querySelector('#crop').addEventListener('click', function () {
+                    let newImg = new Image();
+
                     let x = document.querySelector('.resize__control').getBoundingClientRect().left - resize.getBoundingClientRect().left;
                     let y = document.querySelector('.resize__control').getBoundingClientRect().top - resize.getBoundingClientRect().top;
+                    btnPrevUpload.style.display = 'none';
+                    btnPrevCrop.style.display = 'block';
+                    move.style.display = 'none';
+                    previewText.style.display = 'inline';
 
                     resizeCanvas.width = 200;
                     resizeCanvas.height = 200;
@@ -168,9 +137,42 @@ function photoUpload(e) {
                     newImg.style.width = `200px`;
                     newImg.style.height = `200px`;
                     newImg.classList.add('add');
-                    resizeZone.style.display = 'none';
-                    resize.removeChild(img);
+                    resize.style.width = 'auto';
+                    resize.style.height = 'auto';
+                    resizeCreate.style.display = 'none';
+                    img.style.display = 'none';
                     resize.appendChild(newImg);
+
+                    function cropPrev() {
+                        newImg.remove();
+                        previewText.style.display = 'none';
+
+                        resize.style.width = `${currentImg.width}px`;
+                        resize.style.height = `${currentImg.height}px`;
+
+                        resizeCreate.style.display = 'block';
+                        img.style.display = 'block';
+                        btnCrop.style.display = 'block';
+                        btnSuccess.style.display = 'none';
+                        btnPrevCrop.style.display = 'none';
+                        btnPrevUpload.style.display = 'block';
+                        conditionsMove();
+                    }
+
+                    document.querySelector('#prevCrop').addEventListener('click', cropPrev);
+
+                    btnSuccess.addEventListener('click', function () {
+                        fetch('/upload', {
+                           method: 'POST',
+                           headers: {'Content-type': 'multipart/form-data'},
+                           body: resizeCanvas.toDataURL('jpeg', 1)
+                       }).then((res) => {
+                           console.log(res);
+                       })
+                    });
+
+                    btnCrop.style.display = 'none';
+                    btnSuccess.style.display = 'block';
                 });
             })
         })
